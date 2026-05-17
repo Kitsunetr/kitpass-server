@@ -1,0 +1,52 @@
+# HTTP -> HTTPS redirect
+server {
+    listen 80;
+    server_name ${DOMAIN} api.${DOMAIN};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# HTTPS server
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${DOMAIN} api.${DOMAIN};
+
+    # TLS certificates (Cloudflare Origin)
+    ssl_certificate     /etc/nginx/ssl/origin.pem;
+    ssl_certificate_key /etc/nginx/ssl/origin-key.pem;
+
+    # TLS hardening
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    # Security headers
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Body size limit for bulk re-encryption payloads
+    client_max_body_size 10M;
+
+    # Proxy timeouts for large operations
+    proxy_read_timeout 120s;
+    proxy_connect_timeout 10s;
+    proxy_send_timeout 120s;
+
+    # API proxy
+    location /api/ {
+        proxy_pass http://api:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
