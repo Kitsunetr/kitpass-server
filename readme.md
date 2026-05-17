@@ -242,14 +242,14 @@ chmod +x update-server.sh
 ```
 
 The script automatically:
-- 📦 **Detects** `update_server.zip` and extracts to a temp directory
-- 💾 **Backs up** all current files to `.backups/<timestamp>/`
-- 🔄 **Updates** only files that actually changed (md5 comparison)
-- 🛡️ **Protects** `.env`, `nginx/ssl/`, `node_modules/` — never overwrites
-- 🔑 **Patches `.env`** — adds missing vars (`REDIS_PASSWORD`, `GLOBAL_RATE_LIMIT`, etc.)
-- 📀 **Migrates** old Docker volumes (`pgdata` → `<project>_pgdata`)
-- 🔨 **Rebuilds and restarts** all Docker containers
-- ✅ **Health checks** the API before finishing
+- **Detects** `update_server.zip` and extracts to a temp directory
+- **Backs up** all current files to `.backups/<timestamp>/`
+- **Updates** only files that actually changed (md5 comparison)
+- **Protects** `.env`, `nginx/ssl/`, `node_modules/` — never overwrites
+- **Patches `.env`** — adds missing vars (`REDIS_PASSWORD`, `GLOBAL_RATE_LIMIT`, etc.)
+- **Migrates** old Docker volumes (`pgdata` → `<project>_pgdata`)
+- **Rebuilds and restarts** all Docker containers
+- **Health checks** the API before finishing
 
 > ⚠️ **Rollback:** If something goes wrong, restore from the backup:
 > ```bash
