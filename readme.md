@@ -2,6 +2,7 @@
 
 Zero-Knowledge encrypted password manager API — Node.js/Fastify backend with PostgreSQL and Redis. If you use it updated-server.sh you must create updated-server.zip file include in "root/server/updated-server.zip"
 
+https://chromewebstore.google.com/detail/ecdkkkcddldncfhpphnoggkijligoile?utm_source=item-share-cb
 ---
 
 ## Prerequisites
